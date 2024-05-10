@@ -1,0 +1,240 @@
+<html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+    </head>
+    <body class="text-xs arial flex flex-col">
+            <% user.forEach((item, index) => { %>
+            <div class="px-20 py-12 h-screen">
+                <div class="d-flex justify-content-end justify-center pb-5" style="text-align: center;">
+                    <div class="w-50 text-right">
+                        <span class="f-10 italic text-xs">Төлөөлөн Удирдах Зөвлөлийн <%= new Date(company.protocolDate).getFullYear() %> оны <%= new Date(company.protocolDate).getMonth() + 1 %> </br> сарын <%= new Date(company.protocolDate).getDate() %>-ний өдрийн <%= company.protocol %> тоот тогтоолын дөрөвдүгээр хавсралт</span>
+                    </div>
+                </div>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-end mt-2 justify-center text-center">
+                            <div class="">
+                                <h5 class="font-weight-bold text-uppercase">"<%= company.name.toUpperCase() %>" ХУВЬЦААТ КОМПАНИЙН ХУВЬЦАА ЭЗЭМШИГЧДИЙН ЭЭЛЖИТ ХУРЛЫН ХЭЛЭЛЦЭХ АСУУДЛААР ХУВЬЦАА ЭЗЭМШИГЧДЭЭС САНАЛ АВАХ ХУУДАС</h5>
+                            </div>
+                        </div>
+                        <div class="mt-4 f-12">
+                            <div class="d-flex justify-content-center">
+                                <div class="mt-4 w-90 f-12">
+                                    <% item.shareholders.forEach((item, index) => { %>
+                                        <span class="">Хувьцаа эзэмшигчийн овог: <%-item.lastname %> нэр: <%-item.firstname %></span>
+                                        <br />
+                                        <span class="">Регистрийн дугаар: <%= item.register %></span>
+                                        <br />
+                                    <span>Хувьцаа эзэмшигчийн бүртгэлийн дугаар: №<%= item.id %></span>
+                                    <br />
+                                        <span>Эзэмшиж буй хувьцааны төрөл: энгийн, тоо: <%= item.amount %>ш</span>
+                                        <br />
+                                        <span class="">Бүртгэсэн /Үнэт цаасны компани/: БиДиСЕК ҮЦК ХК</span>
+                                        <br />
+                                        <span class="">Бүртгэсэн /Брокер/ овог: Бат-Оргил нэр: Онон</span>
+                                        <br />
+                                        <% }) %>
+                                </div>
+                            </div>
+                            <div class="mt-2 f-12"><%= company.name.toUpperCase() %>-ийн Хувьцаа эзэмшигчдийн ээлжит хурал <%= new Date(company.meetingDate).getFullYear() %> оны <%= new Date(company.meetingDate).getMonth() + 1 %> сарын <%= new Date(company.meetingDate).getDate() %> өдрийн <%= new Date(company.meetingDate).getHours() %> цагт цахимаар зохион байгуулагдана.</div>
+                        </div>
+    
+                        <div class="mt-2">
+                            <table class="table head-120 border border-black text-center text-[12px] w-full">
+                                <thead class="border font-light">
+                                    <tr class="border border-black">
+                                        <th scope="col" class="border border-black">№</th>
+                                        <th scope="col" class="border border-black py-8">Хэлэлцэж, батлах асуудлын нэр</th>
+                                        <th scope="col" class="bds-table-horizontal-col border border-black py-3" style="transform: rotate(270deg);padding-left: none;padding-right: none;">Саналын арга</th>
+                                        <th scope="col" style="transform: rotate(270deg);" class="border border-black py-3 px-0">Хурлаас гарах шийдвэрийн төсөл</th>
+                                        <th scope="col" style="transform: rotate(270deg);padding-left: none;padding-right: none;"  class="border border-black py-3 px-0">Зөвшөөрсөн</th>
+                                        <th scope="col" style="transform: rotate(270deg);padding-left: none;padding-right: none;"  class="border border-black py-3 px-0">Татгалзсан</th>
+                                        <th scope="col" style="transform: rotate(270deg);padding-left: none;padding-right: none;"  class="border border-black py-3 px-0">Түдгэлзсэн</th>
+                                        <th scope="col" style="transform: rotate(270deg);padding-left: none;padding-right: none;"  class="border border-black py-3 px-0">Татгалзсан тохиолдолд өгөх санал</th>
+                                        
+                                    </tr>
+                                  
+                                </thead>
+                                <tbody class="text-[12px]">
+                                    <% Erdiin_length=item.discussion_votes.length + 1 %>
+                                    <% item.discussion_votes.forEach((item, index) => { %>
+                                        <tr>
+                                            <td class="f-11 border border-black"><%= index + 1 %></td>
+                                            <td class="f-11 border border-black"><%= item.discussion.question %></td>
+                                            <% if(index ===0) { %>
+                                              <td rowspan='<%= Erdiin_length %>' class="f-11 border border-black" style="transform: rotate(270deg);">Ердийн</td>
+                                            <% } %>
+                                            <td class="f-11 border border-black">Тогтоол №<%= item.discussion.projectId %></td>
+                                            <td class="text-center border border-black"><%= item.accept && "✓" %></td>
+                                            <td class="text-center border border-black"><%= item.declined && "✓" %></td>
+                                            <td class="text-center border border-black"><%= item.suspended && "✓" %></td>
+                                            <td class="border border-black"><%= item.comment && item.comment %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                            <div>
+                                <br></br>
+                            <div class="w-100  text-center mt-2">
+                                <p>Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../</p>
+                            </div>
+                            <br></br>
+                            <div class="w-100 text-center f-12 mt-2">
+                                <span> Хувьцаа Эзэмшигч ................  /......./ гарын үсэг</span>
+                            </div>
+                            <div class="w-100  text-center">
+                                <span> <%= new Date().toLocaleDateString("mn-MN") %> </span>
+                            </div>
+                        <br></br>
+                            <div class="w-100  text-end">
+                                <span> Саналын хуудсын хүчинтэйд тооцон тоолсон Тооллогын Комиссын дарга ................................ </span>
+                            </div>
+                            <div class="w-100  text-end py-2">
+                                <span>  Тооллогын  Комиссын Гишүүн ..............................</span>
+                            </div>
+                            <div class="w-100  text-end pb-2">
+                                <span>  Тооллогын  Комиссын Гишүүн ..............................</span>
+                            </div>
+                            <div class="w-100">
+                                <p>хүчингүйд тооцсон бол шалтгаан:................................................................</p>
+                                <p>................................................................................................................................</p>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+            <% if(bod.length > 0) { %>
+            <div class="px-20 py-12 h-screen">
+                <div class="d-flex justify-content-end justify-center pb-5" style="text-align: center;">
+                    <div class="w-50 text-right">
+                        <span class="f-10 italic text-xs">Төлөөлөн Удирдах Зөвлөлийн <%= new Date(company.protocolDate).getFullYear() %> оны <%= new Date(company.protocolDate).getMonth() + 1 %> </br> сарын <%= new Date(company.protocolDate).getDate() %>-ний өдрийн <%= company.protocol %> тоот тогтоолын дөрөвдүгээр хавсралт</span>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-end mt-2 justify-center text-center">
+                        <div class="">
+                            <h5 class="font-weight-bold text-uppercase">"<%= company.name.toUpperCase() %>" ХУВЬЦААТ КОМПАНИЙН ХУВЬЦАА ЭЗЭМШИГЧДИЙН ЭЭЛЖИТ ХУРЛЫН ХЭЛЭЛЦЭХ АСУУДЛААР ХУВЬЦАА ЭЗЭМШИГЧДЭЭС САНАЛ АВАХ ХУУДАС</h5>
+                        </div>
+                    </div>
+                    <div class="mt-4 f-12">
+                        <div class="d-flex justify-content-center">
+                            <div class="mt-4 w-90 f-12">
+                                <% item.shareholders.forEach((item, index) => { %>
+                                <span class="">Хувьцаа эзэмшигчийн овог: <%-item.lastname %> нэр: <%-item.firstname %></span>
+                                <br />
+                                <span class="">Регистрийн дугаар: <%= item.register %></span>
+                                <br />
+                            <span>Хувьцаа эзэмшигчийн бүртгэлийн дугаар: №<%= item.id %></span>
+                            <br />
+                                <span>Эзэмшиж буй хувьцааны төрөл: энгийн, тоо: <%= item.amount %>ш</span>
+                                <br />
+                                <span class="">Бүртгэсэн /Үнэт цаасны компани/: БиДиСЕК ҮЦК ХК</span>
+                                <br />
+                                <span class="">Бүртгэсэн /Брокер/ овог: Бат-Оргил нэр: Онон</span>
+                                <br />
+                                <% }) %>
+                            </div>
+                        </div>
+                        <div class="mt-2 f-12"><%= company.name.toUpperCase() %>-ийн Хувьцаа эзэмшигчдийн ээлжит хурал <%= new Date(company.meetingDate).getFullYear() %> оны <%= new Date(company.meetingDate).getMonth() + 1 %> сарын <%= new Date(company.meetingDate).getDate() %> өдрийн <%= new Date(company.meetingDate).getHours() %> цагт цахимаар зохион байгуулагдана.</div>
+                    </div>
+                    <div class="mt-2">
+                        <table class="table border border-black text-center text-[12px] w-full">
+                            <thead>
+                                <tr>
+                                    <th class="border border-black" >Д/д</th>
+                                    <th class="border border-black" >ТУЗ-ийн нэр дэвших гишүүдийн нэрс</th>
+                                    <th class="border border-black" >Нэр дэвшигчид өгөх саналын тоо</th>
+                                </tr>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Ердийн гишүүн</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% bod_votes=item.bod_votes %>
+                                <% Erdiin_length3=0 %>
+                                <% bod.forEach(function(item1, index1) { %>
+                                    <% if(item1.status === "0") { %>
+                                        <% Erdiin_length3=Erdiin_length3+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item1.status === "0") { %>
+                                            <td class="w-[5px] border border-black"><%= Erdiin_length3 %>.</td>
+                                            <td class="border border-black"><%=item1.name %></td>
+                                        <% } %>
+                                        <% if(item1.status === "0") { %>
+                                            <td class="border border-black">
+                                            <% bod_votes.forEach((item2, index2) => { %>
+                                                <% if(item2.bodId === item1.id) { %>
+                                                   <%= item2.amount %>
+                                                    <% } %>
+                                            <% }) %>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            <thead>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Хараат бус гишүүн</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="border border-black">
+                                <% Erdiin_length2=0 %>
+                                <% bod.forEach(function(item1, index1) { %>
+                                    <% if(item1.status === "1") { %>
+                                        <% Erdiin_length2=Erdiin_length2+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item1.status === "1") { %>
+                                            <td class="w-[5px] border border-black"><%= Erdiin_length2 %>.</td>
+                                            <td class="border border-black"><%=item1.name %></td>
+                                        <% } %>
+                                        <% if(item1.status === "1") { %>
+                                            <td class="border border-black">
+                                            <% bod_votes.forEach((item2, index2) => { %>
+                                                <% if(item2.bodId === item1.id) { %>
+                                                   <%= item2.amount %>
+                                                    <% } %>
+                                            <% }) %>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <br></br>
+                    <div class="w-100  text-center mt-2">
+                        <p>Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../</p>
+                    </div>
+                    <br></br>
+                    <div class="w-100 text-center f-12 mt-2">
+                        <span> Хувьцаа Эзэмшигч ................  /......./ гарын үсэг</span>
+                    </div>
+                    <div class="w-100  text-center">
+                        <span> <%= new Date().toLocaleDateString("mn-MN") %> </span>
+                    </div>
+                <br></br>
+                    <div class="w-100  text-end">
+                        <span> Саналын хуудсын хүчинтэйд тооцон тоолсон Тооллогын Комиссын дарга ................................ </span>
+                    </div>
+                    <div class="w-100  text-end py-2">
+                        <span>  Тооллогын  Комиссын Гишүүн ..............................</span>
+                    </div>
+                    <div class="w-100  text-end pb-2">
+                        <span>  Тооллогын  Комиссын Гишүүн ..............................</span>
+                    </div>
+                    <div class="w-100">
+                        <p>хүчингүйд тооцсон бол шалтгаан:................................................................</p>
+                        <p>................................................................................................................................</p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        <% } %>
+        <% }) %>
+    </body>
+</html>

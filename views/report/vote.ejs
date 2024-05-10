@@ -1,0 +1,267 @@
+<html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+    </head>
+    <body class="text-xs arial flex flex-col">
+        <div class="mx-20 py-12 h-screen">
+                <div class="d-flex justify-content-end justify-center pb-5" style="text-align: center;">    
+                    <div class="grid grid-cols-2">
+                        <img style="height: 25px;" src="https://agm.mn/api/v2/1686016893521.png">
+                    <div class="w-50 text-right">
+                        <span>НУУЦЛАЛТАЙ</span>
+                    </br>
+                    </br>
+                        <span class="f-10 italic text-xs">2023 оны 5 сарын 14-ний өдрийн 16 тоот </br> Төлөөлөн удирдах зөвлөлийн  </br> тогтоолын хавсралт №5</span>
+                    </div>
+                </div>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-end justify-center text-right">
+                        <div class="">
+                            <h5 class="font-bold uppercase">Хувьцаа эзэмшигчдийн ээлжит </br> бус хурлын санал авах хуудас </br><span class="pr-24">№2</span> </h5>
+                        </div>
+                    </div>
+                    <div class="mt-4 f-12">
+                        <span class="">Компанийн нэр: "ХААН БАНК" ХК</span>
+                        <br />
+                        <div class="d-flex justify-content-center pl-3">
+                            <div class="mt-4 w-90 f-12">
+                                <span class="">Хувьцаа эзэмшигчийн овог, нэр: <%= user.shareholders[0].lastname %> <%= user.shareholders[0].firstname %></span>
+                                <br />
+                                <span class="">Хувьцаа эзэмшигчийн регистрийн дугаар: <%= user.shareholders[0].register %></span>
+                                 <br />
+                                <span>Эзэмшиж буй хувьцааны төрөл: Энгийн</span>
+                                <br />
+                                <span>Эзэмшиж буй хувьцааны тоо: <%= user.shareholders[0].amount %>ш</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 f-12">ХААН Банкны хувьцаа эзэмшигчдийн ээлжит бус хурал <%= new Date(company.meetingDate).getFullYear() %> оны <%= new Date(company.meetingDate).getMonth() + 1 %> сарын <%= new Date(company.meetingDate).getDate() %>-ний өдрийн <%= new Date(company.meetingDate).getHours() %> цагт танхим болон цахим хэлбэрээр зохион байгуулагдана.</div>
+                    </div>
+
+                    <div class="mt-2">
+                        <table class="table head-120 border border-black text-center text-[12px] w-full">
+                            <thead class="border font-light">
+                                <tr class="border border-black">
+                                    <th scope="col" class="border border-black">Д/д</th>
+                                    <th scope="col" class="border border-black py-4">Хэлэлцэх асуудал</th>
+                                    <!-- <th scope="col" class="bds-table-horizontal-col border border-black py-3" style="transform: rotate(270deg);padding-left: none;padding-right: none;">Саналын арга</th>
+                                    <th scope="col" style="transform: rotate(270deg);" class="border border-black py-3 px-0">Хурлаас гарах шийдвэрийн төсөл</th> -->
+                                    <th scope="col"   
+                                    class="border border-black py-1 px-0">Зөвшөөрсөн</th>
+                                    <th scope="col"  class="border border-black py-1 px-1">Татгалзсан</th>
+                                    <th scope="col"  class="border border-black py-1 px-1">Түдгэлзсэн</th>
+                                    <th scope="col"  class="border border-black py-3 px-1">Татгалзсан тохиолдолд өгөх санал</th>
+                                    
+                                </tr>
+                              
+                            </thead>
+                            <tbody class="text-[12px]">
+                                <% Erdiin_length=user.discussion_votes.length %>
+                                <% user.discussion_votes.forEach(function(item, index) { %>
+                                    <tr>
+                                        <td class="f-11 border border-black"><%= index + 1 %>.</td>
+                                        <% if(item.discussion.question === "ХААН_Банкны_хувь_нийлүүлсэн_хөрөнгийн_хэмжээг_тогтоох") { %>
+                                        <td class="f-11 border border-black">ХААН Банкны хувь нийлүүлсэн хөрөнгийн хэмжээг тогтоох</td>
+                                        <% } else if(item.discussion.question === "ХААН_Банкны_хувьцаат_компанийн_дүрмийн_төслийг_батлах") { %>
+                                            <td class="f-11 border border-black">ХААН Банкны хувьцаат компанийн дүрмийн төслийг батлах</td>
+                                        <% } else { %>
+                                        <td class="text-center border border-black"><%= item.discussion.question %></td>
+                                        <% } %>
+                                        <td class="text-center border border-black"><%= item.accept && "✓" %></td>
+                                        <td class="text-center border border-black"><%= item.declined && "✓" %></td>
+                                        <td class="text-center border border-black"><%= item.suspended && "✓" %></td>
+                                        <td class="border border-black"><%= item.comment && item.comment %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                        <div>
+                            <ul class="pt-4">
+                                <!-- <li>
+                                    Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../
+                                </li> -->
+                                <li>
+                                    E-Mongolia -аар баталгаажуулж цахимаар санал өгсөн.
+                                </li>
+                                <br />
+                                <li>
+                            Бүртгэсэн /Үнэт цаасны компани/: БиДиСЕК ҮЦК ХК
+                                </li>
+                                <br />
+                                <!-- <li>
+                                    Саналын хуудсыг хүлээн авсан тооллогын комиссын даргын гарын үсэг, тайлал: Д.Дугарбаатар
+                                </li> -->
+                            </ul>
+                        </br>
+                    </br>
+                        <div class="text-center">Энэ хэсгийг хувьцаа эзэмшигчдийн хурлын тооллогын комисс бөглөнө.</div>
+                            </br>
+                        <ul>
+                            <li>Саналын хуудсыг хүчинтэйд тоолсон эсэх (доогуур зурах): Тийм / Үгүй</li>
+                            <li>Тооллогын комиссын даргын гарын үсэг, тайлал: _________________ / Д.Дугарбаатар</li>
+                            <li>Саналын хуудсыг хүчингүйд тооцсон үндэслэл: </li>
+                            <li>_________________________________________________________________________________________________________</li>
+                            <li>_________________________________________________________________________________________________________</li>
+                            <li>_________________________________________________________________________________________________________</li>
+                        </br>
+                            <li class="text-center">
+                                <%= new Date().toLocaleDateString("mn-MN") %>
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
+            </div>
+    </div>
+    <!-- <div class="px-20 py-12 h-screen">
+        <div class="grid grid-cols-2 gap-24">
+            <img style="height: 25px;" src="https://agm.mn/api/v2/1686016893521.png">
+<div class="text-right">НУУЦЛАЛТАЙ</div>
+</div>
+</br>
+<div class="text-center">Энэ хэсгийг хувьцаа эзэмшигчдийн хурлын тооллогын комисс бөглөнө.</div>
+    </br>
+<ul>
+    <li>Саналын хуудсыг хүчинтэйд тоолсон эсэх (доогуур зурах): Тийм / Үгүй</li>
+    <li>Тооллогын комиссын даргын гарын үсэг, тайлал: Д.Дугарбаатар</li>
+    <li>Саналын хуудсыг хүчингүйд тооцсон үндэслэл: </li>
+    <li>_________________________________________________________________________________________________________</li>
+    <li>_________________________________________________________________________________________________________</li>
+    <li>_________________________________________________________________________________________________________</li>
+</ul>
+    </div> -->
+            <div class="mx-20 py-12 h-screen">
+                <div class="d-flex justify-content-end justify-center pb-5" style="text-align: center;">    
+                    <div class="grid grid-cols-2">
+                        <img style="height: 25px;" src="https://agm.mn/api/v2/1686016893521.png">
+                    <div class="w-50 text-right">
+                        <span>НУУЦЛАЛТАЙ</span>
+                    </br>
+                    </br>
+                        <span class="f-10 italic text-xs">2023 оны 5 сарын 14-ний өдрийн 16 тоот </br> Төлөөлөн удирдах зөвлөлийн  </br> тогтоолын хавсралт №5</span>
+                    </div>
+                </div>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-end justify-center text-right">
+                        <div class="">
+                            <h5 class="font-bold uppercase">Хувьцаа эзэмшигчдийн ээлжит </br> бус хурлын санал авах хуудас </br><span class="pr-24">№2</span> </h5>
+                        </div>
+                    </div>
+                    <div class="mt-4 f-12">
+                        <span class="">Компанийн нэр: "ХААН БАНК" ХК</span>
+                        <br />
+                        <div class="d-flex justify-content-center pl-3">
+                            <div class="mt-4 w-90 f-12">
+                                <span class="">Хувьцаа эзэмшигчийн овог, нэр: <%= user.shareholders[0].lastname %> <%= user.shareholders[0].firstname %></span>
+                                <br />
+                                <span class="">Хувьцаа эзэмшигчийн регистрийн дугаар: <%= user.shareholders[0].register %></span>
+                                 <br />
+                                <span>Эзэмшиж буй хувьцааны төрөл: Энгийн</span>
+                                <br />
+                                <span>Эзэмшиж буй хувьцааны тоо: <%= user.shareholders[0].amount %>ш</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 f-12">ХААН Банкны хувьцаа эзэмшигчдийн ээлжит бус хурал <%= new Date(company.meetingDate).getFullYear() %> оны <%= new Date(company.meetingDate).getMonth() + 1 %> сарын <%= new Date(company.meetingDate).getDate() %>-ний өдрийн <%= new Date(company.meetingDate).getHours() %> цагт танхим болон цахим хэлбэрээр зохион байгуулагдана.</div>
+                    </div>
+                    <div class="mt-2">
+                        <table class="table border border-black text-center text-[12px] w-full">
+                            <thead>
+                                <tr>
+                                    <th class="border border-black" >Д/д</th>
+                                    <th class="border border-black" >ТУЗ-ийн нэр дэвших гишүүдийн нэрс</th>
+                                    <th class="border border-black" >Нэр дэвшигчид өгөх саналын тоо</th>
+                                </tr>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Ердийн гишүүн</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% Erdiin_length3=0 %>
+                                <% bod.forEach(function(item, index) { %>
+                                    <% if(item.status === "0") { %>
+                                        <% Erdiin_length3=Erdiin_length3+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item.status === "0") { %>
+                                            <td class="w-[5px] border border-black"><%= Erdiin_length3 %>.</td>
+                                            <td class="border border-black"><%=item.name %></td>
+                                        <% } %>
+                                        <% if(item.status === "0") { %>
+                                            <% if(item.bod_votes.length > 0) { %>
+                                                <td class="border border-black"><%= item.bod_votes[0].amount %>ш</td>
+                                            <% } else { %>
+                                                <td class="border border-black">0ш</td>
+                                            <% } %>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            <thead>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Хараат бус гишүүн</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="border border-black">
+                                <% Erdiin_length2=0 %>
+                                <% bod.forEach(function(item, index) { %>
+                                    <% if(item.status === "1") { %>
+                                        <% Erdiin_length2=Erdiin_length2+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item.status === "1") { %>
+                                            <td class="border border-black"><%= Erdiin_length2 %>.</td>
+                                            <td class="border border-black"><%= item.name %>.</td>
+                                        <% }  %>
+                                        <% if(item.status === "1") { %>
+                                            <% if(item.bod_votes.length > 0) { %> 
+                                                <td class="border border-black"><%= item.bod_votes[0].amount %>ш</td>
+                                            <% } else { %>
+                                                <td class="border border-black">0ш</td>
+                                            <% } %>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <ul class="pt-4">
+                            <!-- <li>
+                                Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../
+                            </li> -->
+                            <li>
+                                E-Mongolia -аар баталгаажуулж цахимаар санал өгсөн.
+                            </li>
+                            <br />
+                            <li>
+                        Бүртгэсэн /Үнэт цаасны компани/: БиДиСЕК ҮЦК ХК
+                            </li>
+                            <br />
+                            <!-- <li>
+                                Саналын хуудсыг хүлээн авсан тооллогын комиссын даргын гарын үсэг, тайлал: Д.Дугарбаатар
+                            </li> -->
+                        </ul>
+                    </br>
+                </br>
+                    <div class="text-center">Энэ хэсгийг хувьцаа эзэмшигчдийн хурлын тооллогын комисс бөглөнө.</div>
+                        </br>
+                    <ul>
+                        <li>Саналын хуудсыг хүчинтэйд тоолсон эсэх (доогуур зурах): Тийм / Үгүй</li>
+                        <li>Тооллогын комиссын даргын гарын үсэг, тайлал: _________________ / Д.Дугарбаатар</li>
+                        <li>Саналын хуудсыг хүчингүйд тооцсон үндэслэл: </li>
+                        <li>_________________________________________________________________________________________________________</li>
+                        <li>_________________________________________________________________________________________________________</li>
+                        <li>_________________________________________________________________________________________________________</li>
+                    </br>
+                        <li class="text-center">
+                            <%= new Date().toLocaleDateString("mn-MN") %>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+    </body>
+</html>

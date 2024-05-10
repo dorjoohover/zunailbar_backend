@@ -1,0 +1,260 @@
+<html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        
+    </head>
+    <body class="text-xs arial flex flex-col">
+        <% user.forEach((item, index) => { %>
+            <div class="mx-20 py-12 h-screen">
+                <div class="d-flex justify-content-end justify-center pb-5">    
+                    <div class="grid grid-cols-2">
+                        <img style="height: 25px;" src="https://agm.mn/api/v2/1687413223207.png">
+                    <div class="w-50 text-right">
+                        <div class="w-50 text-right">
+                        <span>CONFIDENTIAL</span>
+                        </br>
+                        </br>
+                        <span class="f-10 italic text-xs">Appendix No.5 of the Resolution <%= company.protocol %> of</br> the Board of Directors, dated on <%= new Date(company.protocolDate)%></span>
+                    </div>
+                </div>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-end mt-2 justify-center text-right">
+                        <div class="">
+                            <h5 class="font-bold uppercase">EXTRAORDINARY SHAREHOLDERS MEETING </br> BALLOT PAPER NO.1</h5>
+                        </div>
+                    </div>
+                    <div class="mt-4 f-12">
+                        <span class="">Company name: Khan Bank</span>
+                        <br />
+                        <div class="d-flex justify-content-center pl-3">
+                            <div class="mt-4 w-90 f-12">
+                                <% item.shareholders.forEach((item, index) => { %>
+                                <span class="">shareholder's full name: <%-item.lastname %> <%-item.firstname %></span>
+                                <br />
+                                <span class="">shareholder's registeration No: <%= item.register %></span>
+                                 <br />
+                                <span>Type of shares held: Ordinary</span>
+                                <br />
+                                <span>Number of shares held: <%= item.amount %></span>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <div class="mt-2 f-12">Extraordinary shareholder's meeting of Khan Bank shall be held  in-person/online on <%= new Date(company.meetingDate) %></div>
+                    </div>
+
+                    <div class="mt-2">
+                        <table class="table head-120 border border-black text-center text-[12px] w-full">
+                            <thead class="border font-light">
+                                <tr class="border border-black">
+                                    <th scope="col" class="border border-black">No.</th>
+                                    <th scope="col" class="border border-black py-4">Agenda items</th>
+                                    <th scope="col"   
+                                    class="border border-black py-1 px-0">Approved</th>
+                                    <th scope="col"  class="border border-black py-1 px-1">Rejected</th>
+                                    <th scope="col"  class="border border-black py-1 px-1">Abstained</th>
+                                    <th scope="col"  class="border border-black py-3 px-1">Comment (if rejected)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-[12px]">
+                                <% item.discussion_votes.forEach((item, index) => { %>
+                                    <tr>
+                                        <td class="f-11 border border-black"><%= index + 1 %>.</td>
+                                        <% if(item.discussion.question === "ХААН_Банкны_хувь_нийлүүлсэн_хөрөнгийн_хэмжээг_тогтоох") { %>
+                                        <td class="f-11 border border-black">To approve the share capital of Khan bank</td>
+                                        <% } else if(item.discussion.question === "ХААН_Банкны_хувьцаат_компанийн_дүрмийн_төслийг_батлах") { %>
+                                            <td class="f-11 border border-black">To approve the draft Charter of Khan bank as a public company</td>
+                                        <% } else { %>
+                                        <td class="text-center border border-black"><%= item.discussion.question %></td>
+                                        <% } %>
+                                        <td class="text-center border border-black"><%= item.accept && "✓" %></td>
+                                        <td class="text-center border border-black"><%= item.declined && "✓" %></td>
+                                        <td class="text-center border border-black"><%= item.suspended && "✓" %></td>
+                                        <td class="border border-black"><%= item.comment && item.comment %></td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                        <div>
+                            <ul class="pt-4">
+                                <!-- <li>
+                                    Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../
+                                </li> -->
+                                <li>
+                                    Voted online with verification by E-Mongolia.
+                                </li>
+                                <br />
+                                <li>
+                            Registered by /Securities company/: BDSec JSC
+                                </li>
+                                <br />
+                                <!-- <li>
+                                    Саналын хуудсыг хүлээн авсан тооллогын комиссын даргын гарын үсэг, тайлал: Д.Дугарбаатар
+                                </li> -->
+                            </ul>
+                        </br>
+                    </br>
+                        <div class="text-center">For use of Tabulation Committee of the Shareholders meeting only.</div>
+                            </br>
+                        <ul>
+                            <li>Whether the ballot paper is deemed valid and counted (to be underlined): Yes / No</li>
+                            <li>Signature and name of Chairperson of the Tabulation Committee: _________________ / Д.Дугарбаатар</li>
+                            <li>Reason to invalidate the ballot paper: </li>
+                            <li>_________________________________________________________________________________________________________</li>
+                            <li>_________________________________________________________________________________________________________</li>
+                            <li>_________________________________________________________________________________________________________</li>
+                        </br>
+                            <li class="text-center">
+                                <%= new Date().toLocaleDateString("mn-MN") %>
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
+            </div>
+        </div>
+        </div>
+        <div class="mx-20 py-12 h-screen">
+            <div class="d-flex justify-content-end justify-center pb-5">    
+                <div class="grid grid-cols-2">
+                    <img style="height: 25px;" src="https://agm.mn/api/v2/1687413223207.png">
+                <div class="w-50 text-right">
+                    <div class="w-50 text-right">
+                    <span>CONFIDENTIAL</span>
+                    </br>
+                    </br>
+                    <span class="f-10 italic text-xs">Appendix No.5 of the Resolution <%= company.protocol %> of</br> the Board of Directors, dated on <%= new Date(company.protocolDate)%></span>
+                </div>
+            </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex justify-content-end mt-2 justify-center text-right">
+                    <div class="">
+                        <h5 class="font-bold uppercase">EXTRAORDINARY SHAREHOLDERS MEETING </br> BALLOT PAPER NO.1</h5>
+                    </div>
+                </div>
+                <div class="mt-4 f-12">
+                    <span class="">Company name: Khan Bank</span>
+                    <br />
+                    <div class="d-flex justify-content-center pl-3">
+                        <div class="mt-4 w-90 f-12">
+                            <% item.shareholders.forEach((item, index) => { %>
+                            <span class="">shareholder's full name: <%-item.lastname %> <%-item.firstname %></span>
+                            <br />
+                            <span class="">shareholder's registeration No: <%= item.register %></span>
+                             <br />
+                            <span>Type of shares held: Ordinary</span>
+                            <br />
+                            <span>Number of shares held: <%= item.amount %></span>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <div class="mt-2 f-12">Extraordinary shareholder's meeting of Khan Bank shall be held  in-person/online on <%= new Date(company.meetingDate) %></div>
+                </div>
+                    <div class="mt-2">
+                        <table class="table border border-black text-center text-[12px] w-full">
+                            <thead>
+                                <tr>
+                                    <th class="border border-black" >No.</th>
+                                    <th class="border border-black" >Name of the nominee to Board of Directors</th>
+                                    <th class="border border-black" >Number of votes to the nominee</th>
+                                </tr>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Regular Director</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% bod_votes=item.bod_votes %>
+                                <% Erdiin_length3=0 %>
+                                <% bod.forEach(function(item1, index1) { %>
+                                    <% if(item1.status === "0") { %>
+                                        <% Erdiin_length3=Erdiin_length3+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item1.status === "0") { %>
+                                            <td class="w-[5px] border border-black"><%= Erdiin_length3 %>.</td>
+                                            <td class="border border-black"><%=item1.name %></td>
+                                        <% } %>
+                                        <% if(item1.status === "0") { %>
+                                            <td class="border border-black">
+                                            <% bod_votes.forEach((item2, index2) => { %>
+                                                <% if(item2.bodId === item1.id) { %>
+                                                   <%= item2.amount %>
+                                                    <% } %>
+                                            <% }) %>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                            <thead>
+                                <tr class="border border-black">
+                                    <th scope="col" colspan="2">Independent Director</th>
+                                    <th scope="col" colspan="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="border border-black">
+                                <% Erdiin_length2=0 %>
+                                <% bod.forEach(function(item1, index1) { %>
+                                    <% if(item1.status === "1") { %>
+                                        <% Erdiin_length2=Erdiin_length2+1 %>
+                                        <% }  %>
+                                    <tr>
+                                        <% if(item1.status === "1") { %>
+                                            <td class="w-[5px] border border-black"><%= Erdiin_length2 %>.</td>
+                                            <td class="border border-black"><%=item1.name %></td>
+                                        <% } %>
+                                        <% if(item1.status === "1") { %>
+                                            <td class="border border-black">
+                                            <% bod_votes.forEach((item2, index2) => { %>
+                                                <% if(item2.bodId === item1.id) { %>
+                                                   <%= item2.amount %>
+                                                    <% } %>
+                                            <% }) %>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <ul class="pt-4">
+                            <!-- <li>
+                                Саналын хуудас хүлээн авсан:    Брокер: ....................... /.............../
+                            </li> -->
+                            <li>
+                                Voted online with verification by E-Mongolia.
+                            </li>
+                            <br />
+                            <li>
+                        Registered by /Securities company/: BDSec JSC
+                            </li>
+                            <br />
+                            <!-- <li>
+                                Саналын хуудсыг хүлээн авсан тооллогын комиссын даргын гарын үсэг, тайлал: Д.Дугарбаатар
+                            </li> -->
+                        </ul>
+                    </br>
+                </br>
+                    <div class="text-center">For use of Tabulation Committee of the Shareholders meeting only.</div>
+                        </br>
+                    <ul>
+                        <li>Whether the ballot paper is deemed valid and counted (to be underlined): Yes / No</li>
+                        <li>Signature and name of Chairperson of the Tabulation Committee: _________________ / Д.Дугарбаатар</li>
+                        <li>Reason to invalidate the ballot paper: </li>
+                        <li>_________________________________________________________________________________________________________</li>
+                        <li>_________________________________________________________________________________________________________</li>
+                        <li>_________________________________________________________________________________________________________</li>
+                    </br>
+                        <li class="text-center">
+                            <%= new Date().toLocaleDateString("mn-MN") %>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+        </div>
+        </div>
+        <% }) %>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="m-24">
+    <div>
+      <% user.forEach((item, index) => { %> <% bod.forEach((item, index) => { %>
+      <ul>
+        <li>BOD</li>
+        <li><%-index %></li>
+        <li>bodname:<%-item.name %></li>
+      </ul>
+      <% }) %>
+      <ul>
+        <li>USER</li>
+        <li><%-index %></li>
+        <li><%-item.id %></li>
+        <li><%-item.register %></li>
+      </ul>
+      <% item.shareholders.forEach((item, index) => { %>
+      <ul>
+        <li>SHAREHOLDERS</li>
+        <li><%-index %></li>
+        <li>firstname:<%-item.firstname %></li>
+      </ul>
+      <% }) %> <% item.discussion_votes.forEach((item, index) => { %>
+      <ul>
+        <li>DISCUSSION_VOTES</li>
+        <li><%-index %></li>
+        <li><%-item.accept %></li>
+        <li><%= item.discussion.question %></li>
+      </ul>
+      <% }) %> <% item.bod_votes.forEach((item, index) => { %>
+      <ul>
+        <li>BOD_VOTES</li>
+        <li><%-index %></li>
+        <li>bodId: <%-item.bod.id %></li>
+        <li><%-item.amount %></li>
+        <li><%= item.bod.companyId %></li>
+      </ul>
+      <% }) %> <% }) %>
+    </div>
+  </body>
+</html>

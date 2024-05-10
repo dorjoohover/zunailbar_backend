@@ -1,0 +1,16 @@
+node_modules/
+public/images
+config/config.json
+./public
+public
+upload
+./upload
+public/images
+.env
+log/access.log
+./log/access.log
+./pdf
+pdf
+log
+./yarn.lock
+yarn.lock
