@@ -36,11 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "branches",
-      timestamps: true,
-      underscored: true,
-      charset: "utf8mb4",
-      collate: "utf8mb4_0900_ai_ci",
-      engine: "InnoDB",
+      charset: "utf8",
+      collate: "utf8_general_ci",
     }
   );
   branch.associate = function (models) {

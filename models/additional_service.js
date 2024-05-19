@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      additional_serviceName: {
+        type: DataTypes.STRING(255),
+        defaultValue: null,
+      },
       custom_price: {
         type: DataTypes.DECIMAL(12, 0),
         defaultValue: null,
@@ -16,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.STRING(255),
         defaultValue: null,
-      },
-      bookingId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
       serviceId: {
         type: DataTypes.INTEGER,
@@ -36,17 +36,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "additional_services",
-      timestamps: true,
-      underscored: true,
-      charset: "utf8mb4",
-      collate: "utf8mb4_0900_ai_ci",
-      engine: "InnoDB",
+      charset: "utf8",
+      collate: "utf8_general_ci",
     }
   );
 
   additional_service.associate = function (models) {
-    additional_service.belongsTo(models.booking);
-    additional_service.belongsTo(models.service);
+    additional_service.hasMany(models.booking_detail);
+    additional_service.belongsTo(models.service, { foreignKey: "serviceId" });
   };
 
   return additional_service;

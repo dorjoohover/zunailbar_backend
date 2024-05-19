@@ -4,7 +4,7 @@ const router = express.Router();
 const { protect, authorize } = require("../middlewares/protect");
 
 const {
-  getAllService,
+  getAllServiceGroups,
   createService,
   getService,
   destroyService,
@@ -14,10 +14,10 @@ const {
 
 router
   .route("/")
-  .get(getAllService)
+  .get(getAllServiceGroups)
   .post(protect, authorize("0"), createService);
 
-router.route("/serviceByGroups").get(getAllServiceByGroup);
+// router.route("/servicesByGroups").get(getAllServiceByGroup);
 
 router
   .route("/:id")

@@ -95,10 +95,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "customers",
       timestamps: true,
-      // underscored: true,
-      // charset: "utf8mb4",
-      // collate: "utf8mb4_general_ci",
-      engine: "InnoDB",
+      charset: "utf8",
+      collate: "utf8_general_ci",
       defaultScope: {
         attributes: { exclude: ["password", "salt"] },
       },

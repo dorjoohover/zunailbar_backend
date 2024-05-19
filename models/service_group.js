@@ -48,18 +48,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "service_groups",
-      timestamps: true,
-      underscored: true,
+      // timestamps: true,
+      // underscored: true,
       charset: "utf8",
       collate: "utf8_general_ci",
-      engine: "InnoDB",
+      // engine: "InnoDB",
     }
   );
   service_group.associate = function (models) {
-    service_group.hasMany(models.service_type, {
-      onDelete: "NO ACTION",
-      onUpdate: "CASCADE",
-    });
+    // service_group.hasMany(models.service_type, {
+    //   onDelete: "NO ACTION",
+    //   onUpdate: "CASCADE",
+    // });
     service_group.hasMany(models.service, {
       onDelete: "NO ACTION",
       onUpdate: "CASCADE",

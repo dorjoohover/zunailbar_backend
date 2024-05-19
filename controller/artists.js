@@ -132,7 +132,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   //Тухайн хэрэглэгчийг хайна
-  const employee = await req.db.employee
+  const artist = await req.db.artist
     .scope("withPassword")
     .findOne({ where: { email: email } });
 
@@ -140,16 +140,16 @@ exports.login = asyncHandler(async (req, res, next) => {
   //   throw new MyError("Таны хэрэглэгчийн эрх хүрэхүй байна", 400);
   // }
 
-  if (!employee) {
+  if (!artist) {
     throw new MyError(`Хэрэглэгч олдсонгүй та бүртгэл ээ үүсгэнэ үү`, 400);
   }
-  const ok = await employee.checkPassword(password);
+  const ok = await artist.checkPassword(password);
 
   if (!ok) {
     throw new MyError("Нууц үг таарахгүй байна", 401);
   }
 
-  const token = employee.getJsonWebToken();
+  const token = artist.getJsonWebToken();
 
   // var updateUser = await req.db.user.findByPk(user.id);
   // updateUser.action = "login";
@@ -161,7 +161,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   //   shareholder1.userId = user.id;
   //   await shareholder1.save();
   // }
-  employee.password = "";
+  artist.password = "";
 
   // var cookieOptions = getCookieOptions();
 
@@ -169,7 +169,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     success: true,
     accessToken: token,
     data: {
-      employee,
+      artist,
     },
   });
 });
@@ -182,31 +182,31 @@ exports.login = asyncHandler(async (req, res, next) => {
 //  #    #  #       #     #  #  #     #    #    #       #    #
 //  #     # #######  #####  ###  #####     #    ####### #     #
 
-exports.register = asyncHandler(async (req, res, next) => {
+exports.createArtist = asyncHandler(async (req, res, next) => {
   if (!req.body) {
-    throw new MyError("Та бүртгэлийн мэдээлэл ээ оруулна уу.", 400); //Та регистрын дугаараа илгээнэ үү.
+    throw new MyError("Та бүртгэлийн мэдээлэл ээ оруулна уу.", 400);
   }
   const { email } = req.body;
-  var exUser = await req.db.employee.findOne({ where: { email: email } });
+  var exArtist = await req.db.artist.findOne({ where: { email: email } });
 
-  if (!exUser) {
-    req.body.status = "9";
-    var employee = await req.db.employee.create(req.body);
+  if (!exArtist) {
+    req.body.status = "1";
+    var artist = await req.db.artist.create(req.body);
   } else {
-    throw new MyError(`${exUser.email} Энэ хэрэглэгч бүртгэлтэй байна.`, 400);
+    throw new MyError(`${exArtist.email} Энэ хэрэглэгч бүртгэлтэй байна.`, 400);
   }
 
-  employee.password = null;
-  employee.confirmationToken = null;
-  employee.confirmationTokenExpire = null;
+  artist.password = null;
+  artist.confirmationToken = null;
+  artist.confirmationTokenExpire = null;
 
-  const token = employee.getJsonWebToken();
+  const token = artist.getJsonWebToken();
 
   res.status(200).json({
     success: true,
     accessToken: token,
     data: {
-      employee,
+      artist,
     },
   });
 });

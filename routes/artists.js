@@ -9,7 +9,7 @@ const {
   getEmployee,
   destroyEmployee,
   updateEmployee,
-  register,
+  createArtist,
   login,
   // logout,
 } = require("../controller/artists");
@@ -18,7 +18,10 @@ const {
 // };
 
 // router.route("/logout").get(logout);
-router.route("/register").post(protect, authorize("0"), register);
+router.route("/createArtist").post(
+  // protect, authorize("0"),
+  createArtist
+);
 router.route("/login").post(login);
 
 router.route("/").get(getAllEmployee).post(createEmployee);

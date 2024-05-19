@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         defaultValue: null,
       },
-      startDate: {
+      startTime: {
         type: DataTypes.TIME,
         defaultValue: null,
       },
-      endDate: {
+      endTime: {
         type: DataTypes.TIME,
         defaultValue: null,
       },

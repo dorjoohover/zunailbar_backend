@@ -9,12 +9,16 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
-      startDate: {
-        type: DataTypes.DATE,
+      date: {
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
-      endDate: {
-        type: DataTypes.DATE,
+      startTime: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
+      endTime: {
+        type: DataTypes.TIME,
         allowNull: false,
       },
       status: {
@@ -58,10 +62,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   booking.associate = function (models) {
-    booking.hasMany(models.additional_service, {
-      onDelete: "NO ACTION",
-      onUpdate: "CASCADE",
-    });
+    // booking.hasMany(models.additional_service, {
+    //   onDelete: "NO ACTION",
+    //   onUpdate: "CASCADE",
+    // });
     booking.belongsTo(models.customer, { foreignKey: "customerId" });
     booking.belongsTo(models.service, { foreignKey: "serviceId" });
     booking.belongsTo(models.artist, { foreignKey: "artistId" });

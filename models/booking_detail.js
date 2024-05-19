@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Checkout = sequelize.define(
-    "checkout",
+  const additional_service = sequelize.define(
+    "booking_detail",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -9,16 +9,16 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         allowNull: false,
       },
+      description: {
+        type: DataTypes.STRING(255),
+        defaultValue: null,
+      },
       bookingId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      serviceCount: {
+      additionalServiceId: {
         type: DataTypes.INTEGER,
-        defaultValue: null,
-      },
-      final_payment: {
-        type: DataTypes.DECIMAL(12, 0),
         defaultValue: null,
       },
       createdAt: {
@@ -31,18 +31,18 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "checkouts",
-      timestamps: true,
-      underscored: true,
-      charset: "utf8mb4",
-      collate: "utf8mb4_0900_ai_ci",
-      engine: "InnoDB",
+      tableName: "booking_details",
+      charset: "utf8",
+      collate: "utf8_general_ci",
     }
   );
 
-  Checkout.associate = function (models) {
-    Checkout.belongsTo(models.booking, { foreignKey: "bookingId" });
+  additional_service.associate = function (models) {
+    additional_service.belongsTo(models.booking, { foreignKey: "bookingId" });
+    additional_service.belongsTo(models.additional_service, {
+      foreignKey: "additionalServiceId",
+    });
   };
 
-  return Checkout;
+  return additional_service;
 };

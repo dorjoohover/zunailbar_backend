@@ -131,14 +131,13 @@ exports.confirmByCompany = asyncHandler(async (req, res, next) => {
 //   #####  ####### #     # #       ### #     # #     #  #####   #####  ####### #     #
 
 exports.confirmUser = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
-  if (!req.body.token) {
+  if (!req.body.number) {
     throw new MyError("main_error_code_required", 400); //хэрэглэгчийн дугаар дамжуулна уу
   }
 
   const encryptedNumber = crypto
     .createHash("sha256")
-    .update(req.body.token)
+    .update(req.body.number)
     .digest("hex");
   var query = {
     where: {
@@ -148,8 +147,13 @@ exports.confirmUser = asyncHandler(async (req, res, next) => {
       },
     },
   };
-  console.log(query);
-  const user = await req.db.customer.findOne(query);
+
+  // console.log(query);
+
+  const shareholder = await req.db.shareholder.findOne({
+    where: { companyId: req.body.companyId, userId: req.body.userId },
+  });
+  const user = await req.db.user.findOne(query);
 
   if (!user) {
     throw new MyError("main_error_user_token_expired", 400); //Токений хүчинтэй хугацаа дууссан байна. gg
@@ -158,23 +162,24 @@ exports.confirmUser = asyncHandler(async (req, res, next) => {
   await user.update({
     confirmationToken: null,
     confirmationTokenExpire: null,
-    // action: "confirmUser",
-    confirm: true,
-    // confirmdate: now(),
+    action: "confirmUser",
   });
-  // await shareholder.update({
-  //   confirm: true,
-  //   confirmdate: now(),
-  // });
 
-  // const token = user.getJsonWebToken();
+  await shareholder.update({
+    confirm: true,
+    confirmdate: now(),
+  });
 
-  // var cookieOptions = getCookieOptions();
+  const token = user.getJsonWebToken();
 
-  res.status(200).json({
+  var cookieOptions = getCookieOptions();
+
+  res.status(200).cookie("token", token, cookieOptions).json({
     success: true,
+    token,
     data: {
       user,
+      shareholder,
     },
   });
 });
@@ -188,22 +193,23 @@ exports.confirmUser = asyncHandler(async (req, res, next) => {
 //   #####  #######    #     #####  ####### #     # #       ### #     # #     #
 
 exports.getConfirmUser = asyncHandler(async (req, res, next) => {
+  var shareholder = await req.db.shareholder.findOne({
+    where: { userId: req.body.id, companyId: req.body.companyId },
+  });
+  var user = await req.db.user.findByPk(req.body.id);
+
+  if (!user) {
+    throw new MyError("main_error_user_not_found", 400); //Хэрэглэгч олдсонгүй
+  }
+
   let method;
 
   if (req.body.type === "email") {
-    var user = await req.db.customer.findOne({
-      where: { email: req.body.email },
-    });
-
-    if (!user) {
-      throw new MyError("main_error_user_not_found", 400); //Хэрэглэгч олдсонгүй
-    }
     //const confirmationToken = user.generateConfirmationToken()
     //const confirmationLink = `${process.env.FRONTEND}/confirmation?token=${confirmationToken}`
     const confirmationNumber = user.generateConfirmationNumber();
-    const confirmationLink = `${process.env.FRONTEND}/confirm?token=${confirmationNumber}`; /* <br><a href="${confirmationLink}">Баталгаажуулах холбоос</a> */
-
-    var message = `Сайн байна уу? <br><br>Zu Nailbar -д бүртгэлээ баталгаажуулах хүсэлт илгээлээ. <br> Дараах линкээр бүртгэлээ баталгаажуулаарай: <br><br> <b><a href="${confirmationLink}">Баталгаажуулах линк</a></b><br><br>Өдрийг сайхан өнгөрүүлээрэй.`;
+    const confirmationLink = `${process.env.FRONTEND}/confirm`; /* <br><a href="${confirmationLink}">Баталгаажуулах холбоос</a> */
+    var message = `Сайн байна уу? <br><br>Та хувьцаа эзэмшигчдийн хуралд онлайнаар оролцох хүсэлт илгээлээ. <br> Дараах дугаарыг ашиглан бүртгэлээ баталгаажуулаарай: <br><br> Баталгаажуулах дугаар: <b>${confirmationNumber}</b><br><br>Хэрэв та хүсэлт илгээгээгүй бол яаралтай 75551919 дугаарт холбогдон мэдэгдэнэ үү.<br><br>Өдрийг сайхан өнгөрүүлээрэй.`;
 
     // user.ip = await public_ip.v4()
     // user.updatedAt = now()
@@ -216,17 +222,47 @@ exports.getConfirmUser = asyncHandler(async (req, res, next) => {
 
     await sendEmail({
       email: user.email,
-      from: "Zu Nailbar бүртгэлээ баталгаажуулах хүсэлт",
+      from: "Хувьцаа эзэмшигчдийн хуралд бүртгүүлэх нь",
       subject: "Баталгаажуулах",
       html: message,
     });
+  } else if (req.body.type === "phone") {
+    const confirmationNumber = user.generateConfirmationNumber();
+    const confirmationLink = `${process.env.FRONTEND}/confirm`;
+
+    // console.log("CONFIRMATION NUMBER: ", confirmationNumber)
+
+    // var messageMn = `Таны баталгаажуулах дугаар: ${confirmationNumber}. Баталгаажуулах холбоос: ${confirmationLink}`;
+    var messageMn = `Agm.mn таны баталгаажуулах дугаар: ${confirmationNumber}.`;
+    var messageEn = `Agm.mn batalgaajuulah code: ${confirmationNumber}.`;
+
+    // user.ip = await public_ip.v4()
+    //    user.updatedAt = now()
+    // console.log("USER: ", user);
+    user.action = "confirmByPhone";
+    await user.save();
+
+    method = "phone";
+
+    if (!user.phone) {
+      throw new MyError("main_error_user_no_phone", 400);
+    }
+
+    await sendSMS({
+      phone: user.phone,
+      subject: "Баталгаажуулах",
+      messageMn: messageMn,
+      messageEn: messageEn,
+    });
   }
+
+  await shareholder.update({ confirmationmethod: method });
 
   res.status(200).json({
     success: true,
     data: {
       user,
-      // shareholder,
+      shareholder,
     },
   });
 });
@@ -348,24 +384,21 @@ exports.confirmToken = asyncHandler(async (req, res, next) => {
 //   #####  #       ######  #     #    #    #######
 
 exports.updateUser = asyncHandler(async (req, res, next) => {
-  // req.body.action = "update user";
-  // req.body.ip = req.headers["x-real-ip"] || req.connection.remoteAddress;
-  // console.log(req.body);
-  if (req.body.password === "") {
-    delete req.body.password;
-  }
-  let customer = await req.db.customer.findByPk(req.params.id);
+  req.body.action = "update user";
+  req.body.ip = req.headers["x-real-ip"] || req.connection.remoteAddress;
 
-  if (!customer) {
+  let user = await req.db.user.findByPk(req.params.id);
+
+  if (!user) {
     throw new MyError(`main_error_user_not_found`, 400);
   }
 
-  customer = await customer.update(req.body);
-  customer.password = "";
-  customer.salt = "";
+  user = await user.update(req.body);
+  user.password = "";
+  user.salt = "";
   res.status(200).json({
     success: true,
-    data: customer,
+    data: user,
   });
 });
 
@@ -378,19 +411,89 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 //  ######  #######  #####     #    #     # #######    #
 
 exports.destroyUser = asyncHandler(async (req, res, next) => {
-  let customer = await req.db.customer.findByPk(req.params.id);
+  // console.log("first");
+  const user = await req.db.user.findByPk(req.params.userId);
 
-  if (!customer) {
-    throw new MyError(`main_error_user_not_found`, 400);
+  if (!user) {
+    throw new MyError(`${req.params.userId} хувьцаа эзэмшигч олдсонгүй`, 400);
   }
-  // customer.destroy()
-  deletedCustomer = await req.db.customer.destroy({
-    where: { id: req.params.id },
+
+  const company = await req.db.company.findByPk(req.params.companyId);
+
+  if (!company) {
+    throw new MyError(`${req.params.companyId} компани олдсонгүй`, 400);
+  }
+
+  var company_discussions = await req.db.discussion.findAll({
+    where: { companyId: company.id },
   });
+  var company_bods = await req.db.bod.findAll({
+    where: { companyId: company.id },
+  });
+  //comment
+  var company_comment = await req.db.comment.findAll({
+    where: { userId: user.id },
+  });
+  // console.log("ЧУХАЛ ДАТА", company_comment);
+  // console.log("ЧУХАЛ ДАТА1", company_bods);
+
+  try {
+    if (company_discussions.length > 0) {
+      company_discussions.forEach(async (disc) => {
+        // console.log("DESTROING: ", disc.id + " " + user.id);
+        await req.db.discussion_vote.destroy({
+          where: { userId: user.id, discussionId: disc.id },
+        });
+      });
+    }
+
+    if (company_bods.length > 0) {
+      company_bods.forEach(async (bod) => {
+        // console.log("DESTROING: ", bod.id + " " + user.id);
+        await req.db.bod_vote.destroy({
+          where: { userId: user.id, bodId: bod.id },
+        });
+      });
+    }
+    try {
+      // console.log("111111");
+      if (company_comment.length > 0) {
+        // console.log("222222");
+        company_comment.forEach(async (comment) => {
+          // console.log("DESTROING: ", comment.id + "/////" + user.id);
+          await req.db.comment.destroy({
+            where: { userId: user.id },
+          });
+        });
+      }
+    } catch (err) {
+      console.log("destroy user ALDAA:>>>>>>", err);
+    }
+  } catch (err) {
+    throw new MyError(err + " устгахад алдаа гарлаа", 400);
+  }
+
+  try {
+    var shareholder = await req.db.shareholder.findOne({
+      where: {
+        userId: user.id,
+        companyId: company.id,
+      },
+    });
+    shareholder.voted = null;
+    shareholder.confirm = null;
+    shareholder.confirmationmethod = null;
+    shareholder.confirmdate = null;
+    shareholder.save();
+  } catch (err) {
+    throw new MyError(err + " алдаа гарлаа", 400);
+  }
+
+  user = await user.destroy({ where: { userId: user.id, bodId: company.id } });
 
   res.status(200).json({
     success: true,
-    data: deletedCustomer,
+    data: user,
   });
 });
 
@@ -427,11 +530,49 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 //  #    # ###### ######     ####   ####  #    # #    # ###### #    #   #    ####
 
 exports.getAllUser = asyncHandler(async (req, res, next) => {
-  let customers = await req.db.customer.findAll();
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const sort = req.query.sort;
+  let select = req.query.select;
+
+  if (select) {
+    select = select.split(",");
+  }
+
+  var remfromquery = ["select", "sort", "page", "limit"];
+  remfromquery.forEach((el) => delete req.query[el]);
+
+  const pagination = await paginate(page, limit, req.db.user);
+
+  let query = {
+    offset: pagination.start - 1,
+    limit,
+  };
+
+  if (req.query) {
+    query.where = req.query;
+  }
+
+  if (select) {
+    query.attributes = select;
+  }
+
+  if (sort) {
+    query.order = sort
+      .split(",")
+      .map((el) => [
+        el.charAt(0) === "-" ? el.substring(1) : el,
+        el.charAt(0) !== "-" ? "ASC" : "DESC",
+      ]);
+  }
+
+  let user = await req.db.user.findAll(query);
 
   res.status(200).json({
     success: true,
-    data: customers,
+    // query: query, //query debuggin
+    data: user,
+    pagination: pagination,
   });
 });
 // end
@@ -453,29 +594,29 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   //Тухайн хэрэглэгчийг хайна
-  const customer = await req.db.customer
+  const manager = await req.db.manager
     .scope("withPassword")
     .findOne({ where: { email: email } });
 
-  if (!customer) {
+  if (!manager) {
     throw new MyError(`Хэрэглэгч олдсонгүй та бүртгэл ээ үүсгэнэ үү`, 400);
   }
-  const ok = await customer.checkPassword(password);
+  const ok = await manager.checkPassword(password);
 
   if (!ok) {
     throw new MyError("Нууц үг таарахгүй байна", 401);
   }
-  if (!customer.confirm) {
-    throw new MyError("customer_confirm_error", 401);
-  }
-  const token = customer.getJsonWebToken();
-  customer.password = "";
+  // if (!manager.confirm) {
+  //   throw new MyError("manager_confirm_error", 401);
+  // }
+  const token = manager.getJsonWebToken();
+  manager.password = "";
 
   res.status(200).cookie("token", token).json({
     success: true,
     accessToken: token,
     data: {
-      customer,
+      manager,
     },
   });
 });
@@ -584,37 +725,38 @@ exports.registerByCommission = asyncHandler(async (req, res, next) => {
 //  #    #  #       #     #  #  #     #    #    #       #    #
 //  #     # #######  #####  ###  #####     #    ####### #     #
 
-exports.register = asyncHandler(async (req, res, next) => {
+exports.createAdmin = asyncHandler(async (req, res, next) => {
   if (!req.body) {
-    throw new MyError("Та бүртгэлийн мэдээлэл ээ оруулна уу.", 400); //Та регистрын дугаараа илгээнэ үү.
+    throw new MyError("Та бүртгэлийн мэдээлэл ээ оруулна уу.", 400);
   }
   const { email } = req.body;
-  var exCustomer = await req.db.customer.findOne({ where: { email: email } });
+  var exManager = await req.db.manager.findOne({ where: { email: email } });
 
-  if (!exCustomer) {
-    req.body.status = "9";
-    var customer = await req.db.customer.create(req.body);
+  if (!exManager) {
+    req.body.status = "0";
+    var manager = await req.db.manager.create(req.body);
   } else {
     throw new MyError(
-      `${exCustomer.email} Энэ хэрэглэгч бүртгэлтэй байна.`,
+      `${exManager.email} Энэ хэрэглэгч бүртгэлтэй байна.`,
       400
     );
   }
 
-  customer.password = null;
-  customer.confirmationToken = null;
-  customer.confirmationTokenExpire = null;
+  manager.password = null;
+  manager.confirmationToken = null;
+  manager.confirmationTokenExpire = null;
 
-  const token = customer.getJsonWebToken();
+  const token = manager.getJsonWebToken();
 
   res.status(200).json({
     success: true,
     accessToken: token,
-    // data: {
-    //   user,
-    // },
+    data: {
+      manager,
+    },
   });
 });
+
 exports.registerByAdmin = asyncHandler(async (req, res, next) => {
   // console.log("$:/user/register/body ", req.body);
   // console.log("register", req.body.register);
@@ -910,24 +1052,19 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 //  #     # #     # #     # #    #  #       #     # #     # #       #     # #       #    #
 //   #####  #     # #     # #     # ####### #     # ####### ####### ######  ####### #     #
 
-exports.AllBookingsByCustomerId = asyncHandler(async (req, res, next) => {
-  // const user = await req.db.user.findByPk(req.params.id, {
-  //   include: req.db.shareholder,
-  // });
-  const booking = await req.db.booking.findAll({
-    where: {
-      customerId: req.params.id,
-    },
+exports.userShareholder = asyncHandler(async (req, res, next) => {
+  const user = await req.db.user.findByPk(req.params.id, {
+    include: req.db.shareholder,
   });
 
-  if (!booking) {
+  if (!user) {
     throw new MyError(`${req.params.id} ID тэй хэрэглэгч олдсонгүй`, 400);
   }
 
   res.status(200).json({
     pk: req.params.id,
     success: true,
-    data: booking,
+    data: user,
   });
 });
 

@@ -12,9 +12,9 @@ const {
   getConfirmUser,
   getUser,
   destroyUser,
-  AllBookingsByCustomerId,
+  userShareholder,
   updateUser,
-  register,
+  createAdmin,
   registerByCommission,
   login,
   forgotPassword,
@@ -26,10 +26,10 @@ const {
   destroyVote,
   registerByAdmin,
   activeUsers,
-} = require("../controller/customer");
+} = require("../controller/manager");
 
 router.route("/logout").get(logout);
-router.route("/register").post(register);
+router.route("/createAdmin").post(createAdmin);
 router
   .route("/registerByAdmin")
   .post(protect, authorize("0", "1"), registerByAdmin);
@@ -49,23 +49,21 @@ router
   .route("/confirmbycompany")
   .post(protect, authorize("0", "1"), confirmByCompany);
 
-router.route("/getconfirm").post(getConfirmUser);
+router.route("/getconfirm").post(protect, getConfirmUser);
 
 router
   .route("/")
-  .get(getAllUser)
+  .get(protect, authorize("0", "1"), getAllUser)
   .post(protect, authorize("0", "1"), createUser);
 
 router.route("/companies").get(protect, authorize("0", "1"), userCompany);
 router
   .route("/:id")
   .get(protect, getUser)
-  .put(protect, authorize("0", "1"), updateUser)
-  .delete(protect, authorize("0", "1"), destroyUser);
-router.route("/:id/booking").get(
-  // protect, authorize("0", "9", "1", "3"),
-  AllBookingsByCustomerId
-);
+  .put(protect, authorize("0", "1"), updateUser);
+router
+  .route("/:id/shareholder")
+  .get(protect, authorize("0", "9", "1", "3"), userShareholder);
 
 router
   .route("/checkconfirmation")

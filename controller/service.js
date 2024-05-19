@@ -104,9 +104,22 @@ exports.getAllService = asyncHandler(async (req, res, next) => {
 });
 
 exports.getAllServiceByGroup = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findAll();
+  const servicesByGroups = await req.db.service_group.findAll({
+    include: [
+      {
+        model: req.db.service,
+        include: {
+          model: req.db.additional_service,
+          // order: [["id", "DESC"]],
+          // where: {
+          //   companyId: companyId,
+          // },
+        },
+      },
+    ],
+  });
   res.status(200).json({
     success: true,
-    data: service,
+    data: servicesByGroups,
   });
 });

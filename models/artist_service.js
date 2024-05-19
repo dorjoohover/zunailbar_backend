@@ -17,10 +17,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: null,
       },
-      serviceTypeId: {
-        type: DataTypes.INTEGER,
-        defaultValue: null,
-      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: null,
@@ -32,11 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "artist_services",
-      timestamps: true,
-      underscored: true,
-      charset: "utf8mb4",
-      collate: "utf8mb4_0900_ai_ci",
-      engine: "InnoDB",
+      charset: "utf8",
+      collate: "utf8_general_ci",
     }
   );
 

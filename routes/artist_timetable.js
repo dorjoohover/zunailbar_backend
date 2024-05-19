@@ -6,11 +6,11 @@ const { protect, authorize } = require("../middlewares/protect");
 const {
   getAllService,
   createService,
-  getService,
+  getArtistsByService,
   destroyService,
   updateService,
   getAllServiceByGroup,
-} = require("../controller/service");
+} = require("../controller/artist_timetable");
 
 router
   .route("/")
@@ -21,7 +21,7 @@ router.route("/servicesByGroups").get(getAllServiceByGroup);
 
 router
   .route("/:id")
-  .get(getService)
+  .get(getArtistsByService)
   .delete(protect, authorize("0"), destroyService)
   .put(protect, authorize("0"), updateService);
 
