@@ -76,89 +76,6 @@ exports.destroyService = asyncHandler(async (req, res, next) => {
 //  #     # #          #
 //   #####  #######    #
 
-// exports.getArtistsByService = asyncHandler(async (req, res, next) => {
-//   //   let service = await req.db.service.findByPk(req.params.id);
-//   //   console.log(req.params.id, req.query.date);
-//   const formattedDate = moment().format("YYYY-MM-DD");
-//   //   console.log("formattedDateTime", formattedDateTime);
-//   //   const artistsByService = await req.db.artist_timetable.findAll({
-//   //     where: { date: req.params.date },
-//   //   });
-//   const artistsByService = await req.db.artist_timetable.findAll({
-//     where: {
-//       date: {
-//         [Sequelize.Op.gte]: formattedDate,
-//       },
-//       artistId: req.params.id,
-//     },
-//   });
-//   // // console.log("artistsByService", artistsByService.date);
-//   // let bookingsDateTime = [];
-//   // artistsByService.forEach(async (element) => {
-//   //   console.log(element.date);
-//   //   const bookingByArtistId = await req.db.booking.findAll({
-//   //     where: {
-//   //       date: element.date,
-//   //       // date: {
-//   //       //   [Sequelize.Op.gte]: formattedDate,
-//   //       // },
-//   //       artistId: element.artistId,
-//   //     },
-//   //   });
-//   //   // console.log(bookingByArtistId.date);
-//   //   bookingByArtistId.forEach((item) => {
-//   //     bookingsDateTime.push({
-//   //       date: item.date,
-//   //       startTime: item.startTime,
-//   //       endTime: item.endTime,
-//   //     });
-//   //   });
-//   //   // console.log("bookingsDateTime", bookingsDateTime);
-//   //   // console.log("bookingByArtistId", bookingByArtistId);
-//   // });
-//   // // console.log("bookingsDateTime", bookingsDateTime);
-
-//   res.status(200).json({
-//     success: true,
-//     data: artistsByService,
-//     // data2: bookingByArtistId,
-//   });
-// });
-// exports.getArtistsByService = asyncHandler(async (req, res, next) => {
-//   const formattedDate = moment().format("YYYY-MM-DD");
-
-//   const artistsByService = await req.db.artist_timetable.findAll({
-//     where: {
-//       date: {
-//         [Op.gte]: formattedDate,
-//       },
-//       artistId: req.params.id,
-//     },
-//   });
-
-//   const generateTimeSlots = (startTime, endTime) => {
-//     const start = moment(startTime, "HH:mm:ss");
-//     const end = moment(endTime, "HH:mm:ss");
-//     const timeSlots = [];
-
-//     while (start <= end) {
-//       timeSlots.push(start.format("HH:mm:ss"));
-//       start.add(1, "hour");
-//     }
-
-//     return timeSlots;
-//   };
-
-//   const formattedArtistsByService = artistsByService.map((entry) => ({
-//     ...entry.dataValues, // Spread the existing properties
-//     timetable: generateTimeSlots(entry.startTime, entry.endTime), // Generate timetable
-//   }));
-
-//   res.status(200).json({
-//     success: true,
-//     data: formattedArtistsByService,
-//   });
-// });
 exports.getArtistsByService = asyncHandler(async (req, res, next) => {
   const formattedDate = moment().format("YYYY-MM-DD");
 
@@ -230,9 +147,9 @@ exports.getArtistsByService = asyncHandler(async (req, res, next) => {
 //  #    # #      #
 //  #    # ###### ######
 
-exports.getAllService = asyncHandler(async (req, res, next) => {
+exports.getAllArtist_timetable = asyncHandler(async (req, res, next) => {
   console.log("getAllService");
-  let service = await req.db.service.findAll();
+  let service = await req.db.artist_timetable.findAll();
   res.status(200).json({
     success: true,
     data: service,
@@ -256,5 +173,26 @@ exports.getAllServiceByGroup = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: servicesByGroups,
+  });
+});
+
+exports.createArtistTimetable = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const ExArtist_timetable = await req.db.artist_timetable.findOne({
+    where: {
+      artistId: req.params.id,
+      date: req.body.date,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+    },
+  });
+  if (!ExArtist_timetable) {
+    var artist_timetable = await req.db.artist_timetable.create(req.body);
+  } else {
+    throw new MyError(`timetable давхацаж байна`, 400);
+  }
+  res.status(200).json({
+    success: true,
+    data: artist_timetable,
   });
 });

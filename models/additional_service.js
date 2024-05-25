@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         defaultValue: null,
       },
-      custom_price: {
+      default_price: {
         type: DataTypes.DECIMAL(12, 0),
         defaultValue: null,
       },

@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
       },
       price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+      },
+      duration: {
         type: DataTypes.DECIMAL(12, 0),
         allowNull: false,
       },

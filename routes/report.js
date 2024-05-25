@@ -9,12 +9,26 @@ const {
   getAllBookingByArtistId,
   createAdditionalServiceByBookingId,
   destroyBooking,
-} = require("../controller/booking");
+  getTotalIncome,
+  getArtistIncome,
+  getServiceIncome,
+} = require("../controller/report");
 
 router.route("/").post(createBooking).get(getAllBooking);
-// router.route("/getAvailableTimes").get(protect, getAvailableTimes);
+router.route("/getTotalIncome").post(
+  // protect,
+  getTotalIncome
+);
+router.route("/getArtistIncome").post(
+  // protect,
+  getArtistIncome
+);
+router.route("/getServiceIncome").post(
+  // protect,
+  getServiceIncome
+);
 router
-  .route("/:bookingId")
+  .route("/:id")
   .get(getAllBookingByArtistId)
   .post(createAdditionalServiceByBookingId)
   .delete(protect, destroyBooking);

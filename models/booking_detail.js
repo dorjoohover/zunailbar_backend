@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      custom_price: {
+        type: DataTypes.DECIMAL(12, 0),
+        defaultValue: null,
+      },
       additionalServiceId: {
         type: DataTypes.INTEGER,
         defaultValue: null,

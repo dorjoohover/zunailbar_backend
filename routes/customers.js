@@ -25,7 +25,7 @@ const {
   userCompany,
   destroyVote,
   registerByAdmin,
-  activeUsers,
+  rateArtist,
 } = require("../controller/customer");
 
 router.route("/logout").get(logout);
@@ -36,7 +36,7 @@ router
 router.route("/login").post(login);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
-router.route("/active").get(activeUsers);
+router.route("/rateArtist").post(rateArtist);
 // router.route("/active").get(protect, authorize("0", "1"), activeUsers);
 
 router

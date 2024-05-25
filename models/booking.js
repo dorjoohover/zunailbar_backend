@@ -62,10 +62,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   booking.associate = function (models) {
-    // booking.hasMany(models.additional_service, {
-    //   onDelete: "NO ACTION",
-    //   onUpdate: "CASCADE",
-    // });
+    booking.hasMany(models.booking_detail, {
+      onDelete: "NO ACTION",
+      onUpdate: "CASCADE",
+    });
     booking.belongsTo(models.customer, { foreignKey: "customerId" });
     booking.belongsTo(models.service, { foreignKey: "serviceId" });
     booking.belongsTo(models.artist, { foreignKey: "artistId" });

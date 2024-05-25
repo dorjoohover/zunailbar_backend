@@ -22,13 +22,13 @@ const getCookieOptions = () => {
 exports.createEmployee = asyncHandler(async (req, res, next) => {
   // req.body.action = "craete employee";
 
-  const user = await req.db.employee.create(req.body);
+  const artist = await req.db.artist.create(req.body);
 
-  user.password = "";
+  // artist.password = "";
 
   res.status(200).json({
     success: true,
-    data: user,
+    data: artist,
   });
 });
 
@@ -41,17 +41,22 @@ exports.createEmployee = asyncHandler(async (req, res, next) => {
 //   #####  #       ######  #     #    #    #######
 
 exports.updateEmployee = asyncHandler(async (req, res, next) => {
-  let employee = await req.db.employee.findByPk(req.params.id);
+  if (req.body.password === "") {
+    delete req.body.password;
+  }
+  let artist = await req.db.artist.findByPk(req.params.id);
 
-  if (!employee) {
+  if (!artist) {
     throw new MyError(`Хэрэглэгч олдсонгүй.`, 400);
   }
 
-  employee = await employee.update(req.body);
+  artist = await artist.update(req.body);
+  artist.password = "";
+  artist.salt = "";
 
   res.status(200).json({
     success: true,
-    data: employee,
+    data: artist,
   });
 });
 
@@ -64,17 +69,17 @@ exports.updateEmployee = asyncHandler(async (req, res, next) => {
 //  ######  #######  #####     #    #     # #######    #
 
 exports.destroyEmployee = asyncHandler(async (req, res, next) => {
-  let employee = await req.db.employee.findByPk(req.params.id);
+  let artist = await req.db.artist.findByPk(req.params.id);
 
-  if (!employee) {
-    throw new MyError(`Хэрэглэгч олдсонгүй`, 400);
+  if (!artist) {
+    throw new MyError(`Artist олдсонгүй`, 400);
   }
 
-  employee = await employee.destroy(req.body);
+  artist = await artist.destroy(req.body);
 
   res.status(200).json({
     success: true,
-    data: employee,
+    data: artist,
   });
 });
 

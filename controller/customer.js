@@ -188,7 +188,7 @@ exports.confirmUser = asyncHandler(async (req, res, next) => {
 //   #####  #######    #     #####  ####### #     # #       ### #     # #     #
 
 exports.getConfirmUser = asyncHandler(async (req, res, next) => {
-  let method;
+  // let method;
 
   if (req.body.type === "email") {
     var user = await req.db.customer.findOne({
@@ -209,10 +209,10 @@ exports.getConfirmUser = asyncHandler(async (req, res, next) => {
     // user.updatedAt = now()
     // console.log(message)
 
-    user.action = "confirmByEmail";
+    // user.action = "confirmByEmail";
     await user.save();
 
-    method = "email";
+    // method = "email";
 
     await sendEmail({
       email: user.email,
@@ -363,6 +363,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   customer = await customer.update(req.body);
   customer.password = "";
   customer.salt = "";
+
   res.status(200).json({
     success: true,
     data: customer,
@@ -480,28 +481,13 @@ exports.login = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.activeUsers = asyncHandler(async (req, res, next) => {
-  // req.session.user = user;
-  // req.session.save();
-
-  const Users = req.session.user;
-  // console.log(Users);
-  // console.log(req.sessionID);
-
-  const sessionStore = req.sessionStore;
-
-  // console.log("store:", sessionStore);
-
-  // Get all sessions
-  const sessions = sessionStore.sessions;
-
-  // Display active sessions
-  // res.json({ sessions });
+exports.rateArtist = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  var rating = await req.db.artist_rating.create(req.body.values);
 
   res.status(200).json({
     success: true,
-    data: Users,
-    data1: sessions,
+    data: rating,
   });
 });
 

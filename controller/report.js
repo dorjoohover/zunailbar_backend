@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const sendEmail = require("../utils/email");
 const MyError = require("../utils/myError");
+const moment = require("moment");
+const { Op } = require("sequelize");
 
 exports.createBooking = asyncHandler(async (req, res, next) => {
   console.log("req.body", req.body);
@@ -165,5 +167,151 @@ exports.destroyBooking = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: booking,
+  });
+});
+
+exports.getTotalIncome = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const startDate = moment(req.body.startDate).format("YYYY-MM-DD");
+  const endDate = moment(req.body.endDate).format("YYYY-MM-DD");
+  const bookings = await req.db.booking.findAll({
+    where: {
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+    },
+    include: [
+      {
+        model: req.db.service,
+      },
+      {
+        model: req.db.booking_detail,
+      },
+    ],
+  });
+
+  if (!bookings || bookings.length === 0) {
+    throw new MyError(`Bookings not found`, 400);
+  }
+
+  let totalIncome = 0;
+
+  bookings.forEach((booking) => {
+    // Add the service price
+    if (booking.service && booking.service.price) {
+      totalIncome += parseFloat(booking.service.price);
+    }
+
+    // Add the custom prices from booking details
+    if (booking.booking_details && booking.booking_details.length > 0) {
+      booking.booking_details.forEach((detail) => {
+        if (detail.custom_price) {
+          totalIncome += parseFloat(detail.custom_price);
+        }
+      });
+    }
+  });
+
+  res.status(200).json({
+    success: true,
+    data: totalIncome,
+  });
+});
+
+exports.getArtistIncome = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const startDate = moment(req.body.startDate).format("YYYY-MM-DD");
+  const endDate = moment(req.body.endDate).format("YYYY-MM-DD");
+  const bookings = await req.db.booking.findAll({
+    where: {
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+      artistId: req.body.artistId,
+    },
+    include: [
+      {
+        model: req.db.service,
+      },
+      {
+        model: req.db.booking_detail,
+      },
+    ],
+  });
+
+  if (!bookings || bookings.length === 0) {
+    throw new MyError(`Bookings not found`, 400);
+  }
+
+  let totalIncome = 0;
+
+  bookings.forEach((booking) => {
+    // Add the service price
+    if (booking.service && booking.service.price) {
+      totalIncome += parseFloat(booking.service.price);
+    }
+
+    // Add the custom prices from booking details
+    if (booking.booking_details && booking.booking_details.length > 0) {
+      booking.booking_details.forEach((detail) => {
+        if (detail.custom_price) {
+          totalIncome += parseFloat(detail.custom_price);
+        }
+      });
+    }
+  });
+
+  res.status(200).json({
+    success: true,
+    data: totalIncome,
+  });
+});
+
+exports.getServiceIncome = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+  const startDate = moment(req.body.startDate).format("YYYY-MM-DD");
+  const endDate = moment(req.body.endDate).format("YYYY-MM-DD");
+  const bookings = await req.db.booking.findAll({
+    where: {
+      date: {
+        [Op.between]: [startDate, endDate],
+      },
+      serviceId: req.body.serviceId,
+    },
+    include: [
+      {
+        model: req.db.service,
+      },
+      {
+        model: req.db.booking_detail,
+      },
+    ],
+  });
+
+  if (!bookings || bookings.length === 0) {
+    throw new MyError(`Bookings not found`, 400);
+  }
+
+  let totalIncome = 0;
+
+  bookings.forEach((booking) => {
+    // Add the service price
+    if (booking.service && booking.service.price) {
+      totalIncome += parseFloat(booking.service.price);
+    }
+
+    // Add the custom prices from booking details
+    if (booking.booking_details && booking.booking_details.length > 0) {
+      booking.booking_details.forEach((detail) => {
+        if (detail.custom_price) {
+          totalIncome += parseFloat(detail.custom_price);
+        }
+      });
+    }
+  });
+
+  res.status(200).json({
+    success: true,
+    data: totalIncome,
   });
 });

@@ -4,17 +4,18 @@ const router = express.Router();
 const { protect, authorize } = require("../middlewares/protect");
 
 const {
-  getAllService,
+  getAllArtist_timetable,
   createService,
   getArtistsByService,
   destroyService,
   updateService,
   getAllServiceByGroup,
+  createArtistTimetable,
 } = require("../controller/artist_timetable");
 
 router
   .route("/")
-  .get(getAllService)
+  .get(getAllArtist_timetable)
   .post(protect, authorize("0"), createService);
 
 router.route("/servicesByGroups").get(getAllServiceByGroup);
@@ -23,6 +24,7 @@ router
   .route("/:id")
   .get(getArtistsByService)
   .delete(protect, authorize("0"), destroyService)
-  .put(protect, authorize("0"), updateService);
+  .put(protect, authorize("0"), updateService)
+  .post(protect, authorize("0"), createArtistTimetable);
 
 module.exports = router;

@@ -35,6 +35,7 @@ const bookingRoutes = require("./routes/booking");
 const serviceGroupRoutes = require("./routes/service_group");
 const artistServicesRoutes = require("./routes/artist_service");
 const artistTimetableRoutes = require("./routes/artist_timetable");
+const reportRoutes = require("./routes/report");
 
 const { register, login } = require("./controller/user");
 const MyError = require("./utils/myError");
@@ -136,6 +137,7 @@ app.use(`/api/${process.env.VERSION}/bookings`, bookingRoutes);
 app.use(`/api/${process.env.VERSION}/service_groups`, serviceGroupRoutes);
 app.use(`/api/${process.env.VERSION}/artist_services`, artistServicesRoutes);
 app.use(`/api/${process.env.VERSION}/artist_timetables`, artistTimetableRoutes);
+app.use(`/api/${process.env.VERSION}/reports`, reportRoutes);
 
 app.use(
   `/api/${process.env.VERSION}/pdf`,

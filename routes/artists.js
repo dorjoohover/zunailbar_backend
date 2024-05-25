@@ -24,7 +24,7 @@ router.route("/createArtist").post(
 );
 router.route("/login").post(login);
 
-router.route("/").get(getAllEmployee).post(createEmployee);
+router.route("/").get(getAllEmployee).post(createArtist);
 
 router
   .route("/:id")
