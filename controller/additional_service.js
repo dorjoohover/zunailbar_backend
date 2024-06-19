@@ -10,12 +10,12 @@ const MyError = require("../utils/myError");
 //  #     # #    #  #       #     #    #    #
 //   #####  #     # ####### #     #    #    #######
 
-exports.createService = asyncHandler(async (req, res, next) => {
-  const service = await req.db.service.create(req.body);
+exports.createAdditionalService = asyncHandler(async (req, res, next) => {
+  const additional_service = await req.db.additional_service.create(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: additional_service,
   });
 });
 
@@ -27,18 +27,20 @@ exports.createService = asyncHandler(async (req, res, next) => {
 //  #     # #       #     # #     #    #    #
 //   #####  #       ######  #     #    #    #######
 
-exports.updateService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+exports.updateAdditionalService = asyncHandler(async (req, res, next) => {
+  let additional_service = await req.db.additional_service.findByPk(
+    req.params.id
+  );
 
-  if (!service) {
+  if (!additional_service) {
     throw new MyError(`Хэрэглэгч олдсонгүй.`, 400);
   }
 
-  service = await service.update(req.body);
+  additional_service = await additional_service.update(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: additional_service,
   });
 });
 
@@ -50,18 +52,20 @@ exports.updateService = asyncHandler(async (req, res, next) => {
 //  #     # #       #     #    #    #    #  #     #    #
 //  ######  #######  #####     #    #     # #######    #
 
-exports.destroyService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+exports.destroyAdditionalService = asyncHandler(async (req, res, next) => {
+  let additional_service = await req.db.additional_service.findByPk(
+    req.params.id
+  );
 
-  if (!service) {
+  if (!additional_service) {
     throw new MyError(`service олдсонгүй`, 400);
   }
 
-  service = await service.destroy(req.body);
+  additional_service = await additional_service.destroy(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: additional_service,
   });
 });
 
@@ -73,16 +77,18 @@ exports.destroyService = asyncHandler(async (req, res, next) => {
 //  #     # #          #
 //   #####  #######    #
 
-exports.getService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+exports.getAdditionalService = asyncHandler(async (req, res, next) => {
+  let additional_service = await req.db.additional_service.findByPk(
+    req.params.id
+  );
 
-  if (!service) {
+  if (!additional_service) {
     throw new MyError(`main_error_employee_not_found`, 400);
   }
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: additional_service,
   });
 });
 
@@ -92,32 +98,6 @@ exports.getService = asyncHandler(async (req, res, next) => {
 //  ###### #      #
 //  #    # #      #
 //  #    # ###### ######
-
-exports.getAllService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findAll();
-  res.status(200).json({
-    success: true,
-    data: service,
-  });
-});
-
-exports.getAllServiceByGroup = asyncHandler(async (req, res, next) => {
-  const servicesByGroups = await req.db.service_group.findAll({
-    include: [
-      {
-        model: req.db.service,
-        include: {
-          model: req.db.additional_service,
-          // order: [["id", "DESC"]],
-        },
-      },
-    ],
-  });
-  res.status(200).json({
-    success: true,
-    data: servicesByGroups,
-  });
-});
 
 exports.getAllAdditionalServices = asyncHandler(async (req, res, next) => {
   const additionalServices = await req.db.additional_service.findAll();

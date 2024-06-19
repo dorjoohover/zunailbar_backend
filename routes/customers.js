@@ -26,6 +26,7 @@ const {
   destroyVote,
   registerByAdmin,
   rateArtist,
+  getRatingByCustomerId,
 } = require("../controller/customer");
 
 router.route("/logout").get(logout);
@@ -65,6 +66,10 @@ router
 router.route("/:id/booking").get(
   // protect, authorize("0", "9", "1", "3"),
   AllBookingsByCustomerId
+);
+router.route("/:id/rating").get(
+  // protect, authorize("0", "9", "1", "3"),
+  getRatingByCustomerId
 );
 
 router

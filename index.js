@@ -33,9 +33,11 @@ const serviceRoutes = require("./routes/service");
 const artistRoutes = require("./routes/artists");
 const bookingRoutes = require("./routes/booking");
 const serviceGroupRoutes = require("./routes/service_group");
+const additionalServicesRoutes = require("./routes/additional_service");
 const artistServicesRoutes = require("./routes/artist_service");
 const artistTimetableRoutes = require("./routes/artist_timetable");
 const reportRoutes = require("./routes/report");
+const uploadRoutes = require("./routes/upload");
 
 const { register, login } = require("./controller/user");
 const MyError = require("./utils/myError");
@@ -132,12 +134,17 @@ app.set("view engine", "pug");
 app.use(`/api/${process.env.VERSION}/customers`, customerRoutes);
 app.use(`/api/${process.env.VERSION}/managers`, managerRoutes);
 app.use(`/api/${process.env.VERSION}/services`, serviceRoutes);
+app.use(
+  `/api/${process.env.VERSION}/additional_services`,
+  additionalServicesRoutes
+);
 app.use(`/api/${process.env.VERSION}/artists`, artistRoutes);
 app.use(`/api/${process.env.VERSION}/bookings`, bookingRoutes);
 app.use(`/api/${process.env.VERSION}/service_groups`, serviceGroupRoutes);
 app.use(`/api/${process.env.VERSION}/artist_services`, artistServicesRoutes);
 app.use(`/api/${process.env.VERSION}/artist_timetables`, artistTimetableRoutes);
 app.use(`/api/${process.env.VERSION}/reports`, reportRoutes);
+app.use(`/api/${process.env.VERSION}/upload`, uploadRoutes);
 
 app.use(
   `/api/${process.env.VERSION}/pdf`,

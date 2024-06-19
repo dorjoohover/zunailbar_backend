@@ -10,13 +10,14 @@ const {
   destroyService,
   updateService,
   getAllServiceByGroup,
+  getAllAdditionalServices,
 } = require("../controller/service");
 
 router
   .route("/")
   .get(getAllService)
   .post(protect, authorize("0"), createService);
-
+router.route("/additionalServices").get(getAllAdditionalServices);
 router.route("/servicesByGroups").get(getAllServiceByGroup);
 
 router

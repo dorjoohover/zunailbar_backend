@@ -897,9 +897,6 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 //   #####  #     # #     # #     # ####### #     # ####### ####### ######  ####### #     #
 
 exports.AllBookingsByCustomerId = asyncHandler(async (req, res, next) => {
-  // const user = await req.db.user.findByPk(req.params.id, {
-  //   include: req.db.shareholder,
-  // });
   const booking = await req.db.booking.findAll({
     where: {
       customerId: req.params.id,
@@ -924,8 +921,6 @@ exports.userCompany = asyncHandler(async (req, res, next) => {
     throw new MyError(`${req.params.id} ID тэй хэрэглэгч олдсонгүй`, 400);
   }
 
-  // // console.log(user)
-
   let companies;
 
   if (user.status === "0") {
@@ -934,24 +929,8 @@ exports.userCompany = asyncHandler(async (req, res, next) => {
     companies = await user.getCompanies();
   }
 
-  // // console.log(companies)
-
-  // if( user.status === "0") {
-  //     findby = {}
-  // } else {
-  //     findby = {
-  //         where: {
-  //             userId: user.id
-  //         }
-  //     }
-  // }
-
-  // // console.log(findby)
-
-  // var companies = await req.db.companies.findAll(findby)
-
   if (companies.length === 0) {
-    throw new MyError("main_error_companies_information_not_found", 400); //Харгалзах компанийн мэдээлэл олдсонгүй
+    throw new MyError("main_error_companies_information_not_found", 400);
   }
 
   res.status(200).json({
@@ -1031,5 +1010,23 @@ exports.destroyVote = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: user,
+  });
+});
+
+exports.getRatingByCustomerId = asyncHandler(async (req, res, next) => {
+  const rating = await req.db.artist_rating.findAll({
+    where: {
+      customerId: req.params.id,
+    },
+  });
+
+  if (!rating) {
+    throw new MyError(`${req.params.id} ID тэй хэрэглэгч олдсонгүй`, 400);
+  }
+
+  res.status(200).json({
+    pk: req.params.id,
+    success: true,
+    data: rating,
   });
 });
