@@ -156,23 +156,67 @@ exports.getAllArtist_timetable = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getAllServiceByGroup = asyncHandler(async (req, res, next) => {
-  const servicesByGroups = await req.db.service_group.findAll({
-    include: [
-      {
-        model: req.db.service,
-        // include: {
-        //   model: req.db.discussion,
-        //   where: {
-        //     companyId: companyId,
-        //   },
-        // },
+exports.BulkCreateArtistTimetable = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+
+  const { artistId, startDate, endDate, startTime, endTime, days } = req.body;
+
+  // Parse the startDate and endDate
+  const start = moment(startDate);
+  const end = moment(endDate);
+
+  // List to hold the resulting dates
+  const matchingDates = [];
+
+  // Iterate through each day in the range
+  for (let m = start; m.isSameOrBefore(end); m.add(1, "days")) {
+    // Get the day number (1 for Monday, 7 for Sunday)
+    const dayNumber = m.isoWeekday();
+
+    // Check if the day number is in the specified days array
+    if (days.includes(dayNumber)) {
+      // If it matches, add to the list
+      matchingDates.push(m.format("YYYY-MM-DD"));
+    }
+  }
+
+  // Log the matching dates for debugging
+  console.log("Matching Dates:", matchingDates);
+
+  // Iterate through the matching dates and create timetables if not existing
+  for (const date of matchingDates) {
+    const timetable = {
+      artistId,
+      date,
+      startTime,
+      endTime,
+    };
+
+    // Check if the timetable already exists
+    const ExArtist_timetable = await req.db.artist_timetable.findOne({
+      where: {
+        artistId: timetable.artistId,
+        date: timetable.date,
+        startTime: timetable.startTime,
+        endTime: timetable.endTime,
       },
-    ],
-  });
+    });
+
+    if (!ExArtist_timetable) {
+      // Create the new timetable entry
+      await req.db.artist_timetable.create(timetable);
+    } else {
+      // Throw an error if a timetable overlaps
+      throw new MyError(
+        `Timetable overlaps for date ${date} with the given times.`,
+        400
+      );
+    }
+  }
+
   res.status(200).json({
     success: true,
-    data: servicesByGroups,
+    message: "Timetables created successfully",
   });
 });
 

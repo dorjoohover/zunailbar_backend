@@ -10,14 +10,12 @@ const MyError = require("../utils/myError");
 //  #     # #    #  #       #     #    #    #
 //   #####  #     # ####### #     #    #    #######
 
-exports.createService = asyncHandler(async (req, res, next) => {
-  const service = await req.db.service.create(req.body);
-
-  service.password = "";
+exports.createServiceGroup = asyncHandler(async (req, res, next) => {
+  const service_group = await req.db.service_group.create(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: service_group,
   });
 });
 
@@ -29,18 +27,18 @@ exports.createService = asyncHandler(async (req, res, next) => {
 //  #     # #       #     # #     #    #    #
 //   #####  #       ######  #     #    #    #######
 
-exports.updateService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+exports.updateServiceGroup = asyncHandler(async (req, res, next) => {
+  let service_group = await req.db.service_group.findByPk(req.params.id);
 
-  if (!service) {
+  if (!service_group) {
     throw new MyError(`Хэрэглэгч олдсонгүй.`, 400);
   }
 
-  service = await service.update(req.body);
+  service_group = await service_group.update(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: service_group,
   });
 });
 
@@ -52,18 +50,18 @@ exports.updateService = asyncHandler(async (req, res, next) => {
 //  #     # #       #     #    #    #    #  #     #    #
 //  ######  #######  #####     #    #     # #######    #
 
-exports.destroyService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+exports.destroyServiceGroup = asyncHandler(async (req, res, next) => {
+  let service_group = await req.db.service_group.findByPk(req.params.id);
 
-  if (!service) {
+  if (!service_group) {
     throw new MyError(`Хэрэглэгч олдсонгүй`, 400);
   }
 
-  service = await service.destroy(req.body);
+  service_group = await service_group.destroy(req.body);
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: service_group,
   });
 });
 
@@ -76,15 +74,15 @@ exports.destroyService = asyncHandler(async (req, res, next) => {
 //   #####  #######    #
 
 exports.getService = asyncHandler(async (req, res, next) => {
-  let service = await req.db.service.findByPk(req.params.id);
+  let service_group = await req.db.service_group.findByPk(req.params.id);
 
-  if (!service) {
+  if (!service_group) {
     throw new MyError(`main_error_employee_not_found`, 400);
   }
 
   res.status(200).json({
     success: true,
-    data: service,
+    data: service_group,
   });
 });
 

@@ -5,24 +5,24 @@ const { protect, authorize } = require("../middlewares/protect");
 
 const {
   getAllServiceGroups,
-  createService,
+  createServiceGroup,
   getService,
-  destroyService,
-  updateService,
+  destroyServiceGroup,
+  updateServiceGroup,
   getAllServiceByGroup,
 } = require("../controller/service_group");
 
 router
   .route("/")
   .get(getAllServiceGroups)
-  .post(protect, authorize("0"), createService);
+  .post(protect, authorize("0"), createServiceGroup);
 
 // router.route("/servicesByGroups").get(getAllServiceByGroup);
 
 router
   .route("/:id")
   .get(getService)
-  .delete(protect, authorize("0"), destroyService)
-  .put(protect, authorize("0"), updateService);
+  .delete(protect, authorize("0"), destroyServiceGroup)
+  .put(protect, authorize("0"), updateServiceGroup);
 
 module.exports = router;
