@@ -119,7 +119,7 @@ exports.getArtistsByService = asyncHandler(async (req, res, next) => {
     const end = moment(endTime, "HH:mm:ss");
     const timeSlots = [];
 
-    while (start <= end) {
+    while (start < end) {
       const formattedTime = start.format("HH:mm:ss");
       if (!bookedTimesMap.get(date)?.has(formattedTime)) {
         timeSlots.push(formattedTime);

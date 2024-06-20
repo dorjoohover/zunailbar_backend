@@ -20,7 +20,7 @@ router.route("/BulkCreateArtistTimetable").post(BulkCreateArtistTimetable);
 
 router
   .route("/:id")
-  // .get(getArtistsByService)
+  .get(getArtistsByService)
   .delete(protect, authorize("0", "1"), destroyService)
   .put(protect, authorize("0", "1"), updateService)
   .post(protect, authorize("0", "1"), createArtistTimetable);
