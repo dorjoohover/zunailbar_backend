@@ -1,8 +1,6 @@
 node_modules/
 public/images
 config/config.json
-./public
-public
 upload
 ./upload
 public/images
