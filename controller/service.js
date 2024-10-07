@@ -11,6 +11,7 @@ const MyError = require("../utils/myError");
 //   #####  #     # ####### #     #    #    #######
 
 exports.createService = asyncHandler(async (req, res, next) => {
+  console.log(req.body)
   const service = await req.db.service.create(req.body);
 
   res.status(200).json({

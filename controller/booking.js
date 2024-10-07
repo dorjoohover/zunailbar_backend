@@ -50,7 +50,9 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
 });
 
 exports.getAllBooking = asyncHandler(async (req, res, next) => {
-  let bookings = await req.db.booking.findAll();
+  let bookings = await req.db.booking.findAll({
+    order: [["id", "desc"]],
+  });
   res.status(200).json({
     success: true,
     data: bookings,
@@ -67,6 +69,7 @@ exports.getAllBookingByArtistId = asyncHandler(async (req, res, next) => {
       // },
       artistId: req.params.bookingId,
     },
+    order: [["id", "desc"]],
   });
   res.status(200).json({
     success: true,
@@ -77,11 +80,27 @@ exports.getAllBookingByArtistId = asyncHandler(async (req, res, next) => {
 exports.createAdditionalServiceByBookingId = asyncHandler(
   async (req, res, next) => {
     console.log("req.body", req.body.value);
+    let body = req.body.value;
+    body = {
+      artistId: body.artistId,
+      customerID: body.customerID,
+      serviceId: body.serviceId,
+      additionalServiceId: body.additional_services,
+      date: body.date,
+      endTime: body.endTime,
+      startTime: body.startTime,
+      confirmation: body.confirmation,
+      status: body.status,
+      prepayment: body.prepayment,
+      paymentMethod: body.paymentMethod,
+    };
     let booking = await req.db.booking.findByPk(req.params.bookingId);
 
     if (!booking) {
       throw new MyError(`Хэрэглэгч олдсонгүй.`, 400);
     }
+    await booking.update(body);
+
     // if (req.body.value.additional_services.length > 0) {
 
     //   let booking_detail = [];

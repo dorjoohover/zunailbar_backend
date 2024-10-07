@@ -34,7 +34,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
       },
       serviceId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
+        defaultValue: null,
+      },
+      additionalServiceId: {
+        type: DataTypes.STRING,
         defaultValue: null,
       },
       artistId: {
@@ -42,6 +46,14 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: null,
       },
       managerId: {
+        type: DataTypes.INTEGER,
+        defaultValue: null,
+      },
+      paymentMethod: {
+        type: DataTypes.INTEGER,
+        // defaultValue: null,
+      },
+      prepayment: {
         type: DataTypes.INTEGER,
         defaultValue: null,
       },
