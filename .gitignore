@@ -4,7 +4,7 @@ config/config.json
 upload
 ./upload
 public/images
-.env
+
 log/access.log
 ./log/access.log
 ./pdf
